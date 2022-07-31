@@ -1,0 +1,8 @@
+[
+{"food": "Spaghetti","price": "230000", "note":"Nước xốt kem béo thơm cùng vị cua đậm đà"},
+{"food": "Pizza","price": "250000","note":"Gà xốt nước tương ngọt với rong biển, lá tía tô và mayonnaise"},
+{"food": "Pasta", "price": "135000", "note":"Thịt bò, thịt heo, xốt cà chua và phô mai Mozzarella"} , 
+{"food": "Salad","price": "100000","note":"Xốt thì là, xoài, bưởi, dưa hấu và thanh long"},
+{"food": "Bierre", "price": "35000", "note":"Nước táo lên men làm từ nước whey chắt lọc trong quá trình sản xuất phô mai, mang hương vị độc đáo của dứa, quế và hoa bia Úc."},
+{"food": "Pudding", "price": "35000", "note":"Bánh pudding nhà làm hương vị trà xanh"} 
+]
