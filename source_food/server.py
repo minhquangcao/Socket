@@ -47,6 +47,7 @@ def Order(client):
             ]
         }
         '''
+        global name_client
         data = json.loads(dict)
         while True:
             amount = 0
@@ -58,7 +59,8 @@ def Order(client):
             elif request == "Salad": amount = client.recv(1024).decode(FORMAT)
             elif request == "Pudding": amount = client.recv(1024).decode(FORMAT)
             elif request == "Thanh toan":
-                with open("order.json", "w") as f:
+                name_client = client.recv(1024).decode(FORMAT)
+                with open(name_client + ".json", "w") as f:
                     json.dump(data,f, indent = 2)
                     break   
             for items in data['order']:
@@ -67,10 +69,9 @@ def Order(client):
 
         for money in data['order']:
             sum = money["Pizza"] * 250000 + money["Pasta"] * 135000 + money["Spaghetti"] * 230000 +  money["Salad"] * 100000 + money["Pudding"] * 35000 + money["Bierre"] * 35000
-        sum = str(sum)
-        client.sendall(bytes(sum,FORMAT))
+        client.sendall(bytes(str(sum),FORMAT))
         
-        with open("order.json", "w") as f:
+        with open(name_client + ".json", "w") as f:
             json.dump(data,f, indent = 2)
 
     except:
@@ -84,8 +85,8 @@ def checkString(str):
 
 def Pay(client):
     try:
+
         method = client.recv(1024).decode(FORMAT)
-       
         method = str(method)
         pattern = re.compile("[0-9]+")
         while True:
@@ -94,12 +95,14 @@ def Pay(client):
                 # if found match (entire string matches pattern)
                 if checkString(account_number) is True:
                     client.sendall(bytes("Payment success", FORMAT))
-                    with open("order.json") as f:
+                    print(name_client)
+                    # name_client = client.recv(1024).decode(FORMAT)
+                    with open(name_client + ".json") as f:
                         source = json.load(f)
                     for item in source['order']:
                         item['status'] = True
 
-                    with open("order.json", "w") as f:
+                    with open(name_client + ".json", "w") as f:
                         json.dump(source,f, indent = 2)
                     break
                 else:
@@ -108,6 +111,10 @@ def Pay(client):
                     # Pay(client)
             elif method == "CASH":
                 client.sendall(bytes("Payment success", FORMAT))
+                with open(name_client + ".json") as f:
+                        source = json.load(f)
+                for item in source['order']:
+                    item['status'] = True
                 break
     except:
         print("can't recv")

@@ -5,6 +5,7 @@ import pickle
 import json
 HEADERSIZE = 10
 FORMAT = 'utf-8'
+
 def revMenu(client):
     try:
         client.sendall(bytes("Menu",FORMAT))
@@ -51,6 +52,8 @@ def Order(client):
         client.sendall(bytes("Order",FORMAT))
     except:
         print("Connection error")
+    global name_client
+    name_client = input("Enter your name: ")
     while True:
         resquest = input("Mon an muon Order:(Pizza, Pasta, Salad, Spaghetti, Bierre, Pudding)")
         if resquest == "Pizza":
@@ -79,6 +82,8 @@ def Order(client):
             client.sendall(amount.encode(FORMAT))
         elif resquest == "no":
             client.sendall(bytes("Thanh toan",FORMAT))
+            time.sleep(0.1)
+            client.sendall(bytes(name_client,FORMAT))
             break
 
     sum = client.recv(1024).decode(FORMAT)
@@ -95,6 +100,8 @@ def Pay(client):
         account_number = input("Enter the account number: ")
         client.sendall(str(account_number).encode(FORMAT))
         msg = client.recv(1024).decode(FORMAT)
+        print(name_client)
+        # client.sendall(str(name_client).encode(FORMAT))
     elif method == "CASH":
         msg = client.recv(1024).decode(FORMAT)
 
