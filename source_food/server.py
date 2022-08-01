@@ -12,17 +12,20 @@ def Menu(client):
         counter = 1
         while counter != 7:
             fname = 'Resources/img' + str(counter) + '.png'
-            img = open(fname,"rb").read()
-            msg = pickle.dumps(img)
+            img = open(fname,"rb")
+            dataImage = img.read()
+            msg = pickle.dumps(dataImage)
             msg = bytes(f"{len(msg):<{HEADERSIZE}}", FORMAT)+msg
             client.sendall(msg)
             counter += 1
             time.sleep(0.1)
-            # img.close()
-        d = open("Resources/data.json","rb").read()
-        msg = pickle.dumps(d)
+            img.close()
+        fileJson = open("Resources/data.json","rb")
+        data = fileJson.read()
+        msg = pickle.dumps(data)
         msg = bytes(f"{len(msg):<{HEADERSIZE}}", FORMAT)+msg
         client.sendall(msg)
+        fileJson.close()
     except:
         print("Can't send")
     
@@ -57,6 +60,7 @@ def Order(client):
             elif request == "Thanh toan":
                 with open("order.json", "w") as f:
                     json.dump(data,f, indent = 2)
+                    f.close()
                     break   
             for items in data['order']:
                 items[request] = int(amount)
@@ -69,7 +73,7 @@ def Order(client):
         
         with open("order.json", "w") as f:
             json.dump(data,f, indent = 2)
-    
+        f.close()
     except:
         print("Can't order")
 
@@ -86,24 +90,22 @@ def Pay(client):
         method = str(method)
         pattern = re.compile("[0-9]+")
         while True:
-
-            # if found match (entire string matches pattern)
             if method == "VISA":
-
                 account_number = client.recv(1024).decode(FORMAT)
+                # if found match (entire string matches pattern)
                 if checkString(account_number) is True:
                     client.sendall(bytes("Payment success", FORMAT))
                     with open("order.json") as f:
                         source = json.load(f)
-
+                    f.close()
                     for item in source['order']:
                         item['status'] = True
 
                     with open("order.json", "w") as f:
                         json.dump(source,f, indent = 2)
+                    f.close()
                     break
                 else:
-                    print("hello")
                     # if not found match
                     client.sendall(bytes("Re-enter the account number", FORMAT))
                     # Pay(client)
@@ -161,3 +163,7 @@ print("Server IP Address Now ", (socket.gethostbyname(socket.gethostname())))
 SERVER =socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 SERVER.bind((socket.gethostbyname(socket.gethostname()), 5656))
 Serveur()
+
+
+#https://www.analyticssteps.com/blogs/working-python-json-object
+#https://helpex.vn/question/cach-kiem-tra-xem-mot-chuoi-chi-chua-cac-ky-tu-az-az-va-0-9-trung-lap-60bea05ed24b80926dc0594d

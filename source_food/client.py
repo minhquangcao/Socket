@@ -27,7 +27,9 @@ def revMenu(client):
 
             if len(full_msg)-HEADERSIZE == msglen:
                 if(counter == 7):
-                    open("menu.json","wb").write(pickle.loads(full_msg[HEADERSIZE:]))
+                    fileJson = open("menu.json","wb")
+                    fileJson.write(pickle.loads(full_msg[HEADERSIZE:]))
+                    fileJson.close()
                     with open('menu.json') as f:    
                         data = json.load(f)   
                     for food in data:
@@ -35,10 +37,12 @@ def revMenu(client):
                     f.close()
                     break
 
-                open(fname,"wb").write(pickle.loads(full_msg[HEADERSIZE:]))
+                fileImage = open(fname,"wb")
+                fileImage.write(pickle.loads(full_msg[HEADERSIZE:]))
                 new_msg = True
                 full_msg = b""
                 flag = False
+                fileImage.close()
         counter += 1
         flag = True
   
