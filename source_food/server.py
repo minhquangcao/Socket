@@ -60,7 +60,6 @@ def Order(client):
             elif request == "Thanh toan":
                 with open("order.json", "w") as f:
                     json.dump(data,f, indent = 2)
-                    f.close()
                     break   
             for items in data['order']:
                 items[request] = int(amount)
@@ -73,7 +72,7 @@ def Order(client):
         
         with open("order.json", "w") as f:
             json.dump(data,f, indent = 2)
-        f.close()
+
     except:
         print("Can't order")
 
@@ -97,13 +96,11 @@ def Pay(client):
                     client.sendall(bytes("Payment success", FORMAT))
                     with open("order.json") as f:
                         source = json.load(f)
-                    f.close()
                     for item in source['order']:
                         item['status'] = True
 
                     with open("order.json", "w") as f:
                         json.dump(source,f, indent = 2)
-                    f.close()
                     break
                 else:
                     # if not found match

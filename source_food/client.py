@@ -34,7 +34,7 @@ def revMenu(client):
                         data = json.load(f)   
                     for food in data:
                         print("{}: {} VND {}" .format(food['food'], food['price'],food['note']))
-                    f.close()
+                    
                     break
 
                 fileImage = open(fname,"wb")
